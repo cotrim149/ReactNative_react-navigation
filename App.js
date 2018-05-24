@@ -15,12 +15,44 @@ class LogoTitle extends React.Component {
   }
 }
 class HomeScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
+
+    return {
+      // title: 'Home',
+      // If you want to put a image in place of title, uncomment line bellow
+      headerTitle: <LogoTitle />,
+      headerBackTitle: 'Voltar',
+      headerRight: (
+        <Button onPress={params.increaseCount} title="+1" color="#fff" />
+      ),
+    };
+  };
+
+  state = {
+    count: 0,
+  };
+
+  componentDidMount() {
+    this.props.navigation.setParams({ increaseCount: this._increaseCount });
+  }
+
+  _increaseCount = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  // static configuration to single header
+  // static navigationOptions = {
     // title: 'Home',
-
     // If you want to put a image in place of title, uncomment line bellow
-    headerTitle: <LogoTitle />,
-
+    // headerTitle: <LogoTitle />,
+    // headerRight: (
+    //   <Button
+    //     onPress={() => alert('This is a button!')}
+    //     title="Info"
+    //     color="#fff"
+    //   />
+    // ),
     // configure one screen without root configuration for all routes
     // headerStyle: {
     //   backgroundColor: '#f4511e',
@@ -29,7 +61,7 @@ class HomeScreen extends React.Component {
     // headerTitleStyle: {
     //   fontWeight: 'bold',
     // },
-  };
+  // };
 
   render() {
 
@@ -39,7 +71,7 @@ class HomeScreen extends React.Component {
     };
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Home Screen</Text>
+        <Text>Home Screen - {this.state.count}</Text>
         <Button
           title="Go to Details"
           onPress={() => this.props.navigation.navigate('Details',sendParams)}
@@ -58,9 +90,10 @@ class DetailsScreen extends React.Component {
       title: params ? params.otherParam : 'A Nested Details Screen',
       /* These values are used instead of the shared configuration! */
       headerStyle: {
-        backgroundColor: navigationOptions.headerTintColor,
+        backgroundColor: 'blue',
       },
       headerTintColor: navigationOptions.headerStyle.backgroundColor,
+      headerBackImage: LogoTitle,
     };
   };
 
