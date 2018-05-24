@@ -1,8 +1,36 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
 
+import Image1 from './assets/spiro.png';
+
+class LogoTitle extends React.Component {
+  render() {
+    return (
+      <Image
+        source={Image1}
+        style={{ width: 30, height: 30 }}
+      />
+    );
+  }
+}
 class HomeScreen extends React.Component {
+  static navigationOptions = {
+    // title: 'Home',
+
+    // If you want to put a image in place of title, uncomment line bellow
+    headerTitle: <LogoTitle />,
+
+    // configure one screen without root configuration for all routes
+    // headerStyle: {
+    //   backgroundColor: '#f4511e',
+    // },
+    // headerTintColor: '#fff',
+    // headerTitleStyle: {
+    //   fontWeight: 'bold',
+    // },
+  };
+
   render() {
 
     let sendParams = {
@@ -22,6 +50,20 @@ class HomeScreen extends React.Component {
 }
 
 class DetailsScreen extends React.Component {
+
+  static navigationOptions = ({ navigation, navigationOptions }) => {
+    const { params } = navigation.state;
+
+    return {
+      title: params ? params.otherParam : 'A Nested Details Screen',
+      /* These values are used instead of the shared configuration! */
+      headerStyle: {
+        backgroundColor: navigationOptions.headerTintColor,
+      },
+      headerTintColor: navigationOptions.headerStyle.backgroundColor,
+    };
+  };
+
   render() {
 
     /* Get the param, provide a fallback value if not available */
@@ -35,6 +77,11 @@ class DetailsScreen extends React.Component {
         <Text>Sent Navigation Values</Text>
         <Text>Item id: {JSON.stringify(itemId)}</Text>
         <Text>Other Param: {JSON.stringify(otherParam)}</Text>
+
+        <Button
+          title="Update the title"
+          onPress={() => this.props.navigation.setParams({otherParam: 'Updated!'})}
+        />
 
         <Text style = {{fontSize: 20}}>Details Screen</Text>
         <Button
@@ -75,9 +122,18 @@ const RootStack = createStackNavigator(
   },
   {
     initialRouteName: 'Home',
+    /* The header config from HomeScreen is now here and configure all screens route */
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
   }
 );
-
 export default class App extends React.Component {
   render() {
     return <RootStack />;
