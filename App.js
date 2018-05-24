@@ -4,12 +4,17 @@ import { createStackNavigator } from 'react-navigation'; // Version can be speci
 
 class HomeScreen extends React.Component {
   render() {
+
+    let sendParams = {
+      itemId: 10,
+      otherParam: 'Some param!'
+    };
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Home Screen</Text>
         <Button
           title="Go to Details"
-          onPress={() => this.props.navigation.navigate('Details')}
+          onPress={() => this.props.navigation.navigate('Details',sendParams)}
         />
       </View>
     );
@@ -18,9 +23,20 @@ class HomeScreen extends React.Component {
 
 class DetailsScreen extends React.Component {
   render() {
+
+    /* Get the param, provide a fallback value if not available */
+    const { navigation } = this.props;
+    const itemId = navigation.getParam('itemId', 'NO-ID');
+    const otherParam = navigation.getParam('otherParam', 'some default value');
+
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
-        <Text>Details Screen</Text>
+
+        <Text>Sent Navigation Values</Text>
+        <Text>Item id: {JSON.stringify(itemId)}</Text>
+        <Text>Other Param: {JSON.stringify(otherParam)}</Text>
+
+        <Text style = {{fontSize: 20}}>Details Screen</Text>
         <Button
           title="Go to Details... again"
           onPress={() => this.props.navigation.navigate('Details')}
