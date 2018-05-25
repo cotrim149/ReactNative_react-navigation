@@ -14,14 +14,34 @@ class LogoTitle extends React.Component {
     );
   }
 }
+class ModalScreen extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ fontSize: 30 }}>This is a modal!</Text>
+        <Button
+          onPress={() => this.props.navigation.goBack()}
+          title="Dismiss"
+        />
+      </View>
+    );
+  }
+}
 class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {};
 
     return {
-      // title: 'Home',
+      title: 'Home',
       // If you want to put a image in place of title, uncomment line bellow
-      headerTitle: <LogoTitle />,
+      // headerTitle: <LogoTitle />,
+      headerLeft: (
+        <Button
+          onPress={() => navigation.navigate('MyModal')}
+          title="Info"
+          color="#fff"
+        />
+      ),
       headerBackTitle: 'Voltar',
       headerRight: (
         <Button onPress={params.increaseCount} title="+1" color="#fff" />
@@ -147,15 +167,17 @@ class DetailsScreen extends React.Component {
   }
 }
 
-const RootStack = createStackNavigator(
+const MainStack = createStackNavigator(
   {
-    // RouteName: ResourceScreen
-    Home: HomeScreen,
-    Details: DetailsScreen,
+    Home: {
+      screen: HomeScreen,
+    },
+    Details: {
+      screen: DetailsScreen,
+    },
   },
   {
     initialRouteName: 'Home',
-    /* The header config from HomeScreen is now here and configure all screens route */
     navigationOptions: {
       headerStyle: {
         backgroundColor: '#f4511e',
@@ -167,6 +189,22 @@ const RootStack = createStackNavigator(
     },
   }
 );
+
+const RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: MainStack,
+    },
+    MyModal: {
+      screen: ModalScreen,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+);
+
 export default class App extends React.Component {
   render() {
     return <RootStack />;
